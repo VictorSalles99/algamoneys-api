@@ -2,6 +2,7 @@ package com.example.algamoney.api.resource;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -60,13 +61,23 @@ public class CategotiaResource {
 		// setar a chave location no headers
 		response.setHeader("Location", uri.toASCIIString());
 
-		
-		// caso o retorno (se houver) estiver informando o status (created) podemos remover a anotação responseStaus (linha 47)
+		// caso o retorno (se houver) estiver informando o status (created) podemos
+		// remover a anotação responseStaus (linha 47)
 		return ResponseEntity.created(uri).body(categoriaSalva);
 	}
-	
+
+	// verificação de conteudo e manipulação de status http (ispresent)
 	@GetMapping("/{codigo}")
-	public Categoria buscarCategoriaPeloCodigo(@PathVariable Long codigo) {
-		return categoriaRepository.findById(codigo).orElse(null);
+	public ResponseEntity<Categoria> buscarCategoriaPeloCodigo(@PathVariable Long codigo) {
+		Optional<Categoria> categoria = categoriaRepository.findById(codigo);
+		return categoria.isEmpty() ? ResponseEntity.ok(categoria.orElse(null)) : ResponseEntity.notFound().build();
 	}
+	
+	//segunda forma de fazer a verificação de retorno (map)
+//	@GetMapping("/{codigo}")
+//	public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
+//	  return this.categoriaRepository.findById(codigo)
+//	      .map(categoria -> ResponseEntity.ok(categoria))
+//	      .orElse(ResponseEntity.notFound().build());
+//	}
 }
