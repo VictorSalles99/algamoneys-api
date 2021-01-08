@@ -13,6 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "lancamento")
@@ -21,25 +24,35 @@ public class Lancamento {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
+	
+	@NotNull
 	private String descricao;
 
 	@Column(name = "data_vencimento")
+	@JsonFormat(pattern =  "dd/MM/yyyy")
+	@NotNull
 	private LocalDate dataVencimento;
 
 	@Column(name = "data_pagamento")
+	@JsonFormat(pattern =  "dd/MM/yyyy")
 	private LocalDate dataPagemnto;
+	
+	@NotNull
 	private BigDecimal valor;
 	private String observacao;
 	
 	@Enumerated(EnumType.STRING)
+	@NotNull
 	private TipoLancamento tipo;
 
 	@ManyToOne
 	@JoinColumn(name="codigo_pessoa")
+	@NotNull
 	private Pessoa pessoa;
 	
 	@ManyToOne
 	@JoinColumn(name="codigo_categoria")
+	@NotNull
 	private Categoria categoria;
 
 	public Long getCodigo() {

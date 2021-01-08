@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,16 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, erro, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 	}
 
+	@ExceptionHandler({DataIntegrityViolationException.class})
+	public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex,  WebRequest request){
+		
+		String msgUser = messageSource.getMessage("data.invalid", null, LocaleContextHolder.getLocale());
+		String msgDev = Optional.ofNullable(ex.getCause()).orElse(ex).toString();
+		
+		List<Erro> erro = Arrays.asList(new Erro(msgUser, msgDev));
+		return handleExceptionInternal(ex, erro, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+	
 	private List<Erro> criarListaDeErros(BindingResult res) {
 		List<Erro> erros = new ArrayList<>();
 
