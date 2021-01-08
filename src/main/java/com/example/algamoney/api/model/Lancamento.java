@@ -31,7 +31,7 @@ public class Lancamento {
 	private BigDecimal valor;
 	private String observacao;
 	
-	@Enumerated(EnumType.ORDINAL)
+	@Enumerated(EnumType.STRING)
 	private TipoLancamento tipo;
 
 	@ManyToOne
