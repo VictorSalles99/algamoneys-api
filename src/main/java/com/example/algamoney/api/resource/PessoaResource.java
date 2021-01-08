@@ -6,14 +6,17 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -29,7 +32,7 @@ public class PessoaResource {
 
 	@Autowired
 	private ApplicationEventPublisher publisher;
-	
+
 	@Autowired
 	PessoaRepository pessoaRepository;
 
@@ -50,10 +53,18 @@ public class PessoaResource {
 		Optional<Pessoa> pessoa = pessoaRepository.findById(codigo);
 		return !pessoa.isEmpty() ? ResponseEntity.ok(pessoa.orElse(null)) : ResponseEntity.notFound().build();
 	}
-	
+
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void removerPessoa(@PathVariable Long codigo) {
 		pessoaRepository.deleteById(codigo);
+	}
+
+	@PutMapping("/{codigo}")
+	public Pessoa atualizar(@PathVariable Long codigo, @RequestBody Pessoa pessoa) {
+		Pessoa pessoaEncontrada = pessoaRepository.findById(codigo)
+				.orElseThrow(() -> new EmptyResultDataAccessException(1));
+		BeanUtils.copyProperties(pessoa, pessoaEncontrada, "codigo");
+		return pessoaRepository.save(pessoaEncontrada);
 	}
 }
