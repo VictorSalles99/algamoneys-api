@@ -52,7 +52,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex,  WebRequest request){
 		
 		String msgUser = messageSource.getMessage("data.invalid", null, LocaleContextHolder.getLocale());
-		String msgDev = Optional.ofNullable(ex.getCause()).orElse(ex).toString();
+		String msgDev = ex.getRootCause().toString();// Optional.ofNullable(ex.getCause()).orElse(ex).toString();
 		
 		List<Erro> erro = Arrays.asList(new Erro(msgUser, msgDev));
 		return handleExceptionInternal(ex, erro, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
