@@ -3,6 +3,7 @@ package com.example.algamoney.api.exceptionhandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -68,7 +69,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 				LocaleContextHolder.getLocale());
 
 		// pego a causa da exeção (ex.getCause())
-		String retornoDeErroDev = ex.getCause().toString();
+		String retornoDeErroDev = Optional.ofNullable(ex.getCause()).orElse(ex).toString();
 
 		return handleExceptionInternal(ex, new Erro(retornoDeErroUsuario, retornoDeErroDev), headers,
 				HttpStatus.BAD_REQUEST, request);

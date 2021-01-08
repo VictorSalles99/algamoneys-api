@@ -15,9 +15,20 @@ public class PessoaService {
 	PessoaRepository pessoaRepository;
 
 	public Pessoa atualizar(Long codigo, Pessoa pessoa) {
-		Pessoa pessoaEncontrada = pessoaRepository.findById(codigo)
-				.orElseThrow(() -> new EmptyResultDataAccessException(1));
+		Pessoa pessoaEncontrada = buscarPessoasPorCodigo(codigo);
 		BeanUtils.copyProperties(pessoa, pessoaEncontrada, "codigo");
 		return pessoaRepository.save(pessoaEncontrada);
+	}
+
+	public void atualizarStatusPessoa(Long codigo, Boolean status) {
+		Pessoa pessoaEncontrada = buscarPessoasPorCodigo(codigo);
+		pessoaEncontrada.setAtivo(status);
+		pessoaRepository.save(pessoaEncontrada);
+	}
+
+	private Pessoa buscarPessoasPorCodigo(Long codigo) {
+		Pessoa pessoaEncontrada = pessoaRepository.findById(codigo)
+				.orElseThrow(() -> new EmptyResultDataAccessException(1));
+		return pessoaEncontrada;
 	}
 }
