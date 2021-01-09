@@ -11,7 +11,6 @@ import com.example.algamoney.api.repository.LancamentoRepository;
 import com.example.algamoney.api.repository.PessoaRepository;
 import com.example.algamoney.api.service.exception.PessoaInativaException;
 import com.example.algamoney.api.service.exception.PessoaInexistenteException;
-import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaException;
 
 @Service
 public class LancamentoService {
