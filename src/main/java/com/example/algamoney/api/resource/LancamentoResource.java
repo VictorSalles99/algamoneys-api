@@ -26,10 +26,10 @@ import com.example.algamoney.api.event.RecursoEvents;
 import com.example.algamoney.api.exceptionhandler.ResponseExceptionHandler.Erro;
 import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.repository.LancamentoRepository;
+import com.example.algamoney.api.repository.filter.LancamentoFilter;
 import com.example.algamoney.api.service.LancamentoService;
 import com.example.algamoney.api.service.exception.PessoaInativaException;
 import com.example.algamoney.api.service.exception.PessoaInexistenteException;
-import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaException;
 
 @RestController
 @RequestMapping("/lancamento")
@@ -48,8 +48,8 @@ public class LancamentoResource {
 	LancamentoRepository lancamentoRepository;
 
 	@GetMapping
-	public List<Lancamento> buscarTodosLancamentos() {
-		return lancamentoRepository.findAll();
+	public List<Lancamento> pesquisar(LancamentoFilter lancamentoFilter) {
+		return lancamentoRepository.filtrar(lancamentoFilter);
 	}
 
 	@GetMapping("/{codigo}")
@@ -78,7 +78,6 @@ public class LancamentoResource {
 	
 	@ExceptionHandler({ PessoaInexistenteException.class })
 	public ResponseEntity<?> handlePessoaInexistenteException(PessoaInexistenteException ex) {
-		
 		String msgUser = messageSource.getMessage("pessoa.inexistente", null, LocaleContextHolder.getLocale());
 		String msgDev = ex.toString();
 		List<Erro> erro = Arrays.asList(new Erro(msgUser, msgDev));
