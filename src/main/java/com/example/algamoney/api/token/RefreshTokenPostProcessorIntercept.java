@@ -27,7 +27,6 @@ public class RefreshTokenPostProcessorIntercept implements ResponseBodyAdvice<OA
 
 	@Override
 	public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-		System.out.println(returnType.getMethod().getName());
 		return returnType.getMethod().getName().equals("postAccessToken");
 		// Caso o returnType acima for true, será executado o metodo abaixo
 	}
