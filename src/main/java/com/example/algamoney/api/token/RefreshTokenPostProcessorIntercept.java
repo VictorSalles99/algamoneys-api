@@ -62,7 +62,7 @@ public class RefreshTokenPostProcessorIntercept implements ResponseBodyAdvice<OA
 
 		cookie.setHttpOnly(true);
 		cookie.setSecure(false);
-		cookie.setPath(req.getContextPath() + "/auth/token");
+		cookie.setPath(req.getContextPath() + "/oauth/token");
 		cookie.setMaxAge(2592000);
 		res.addCookie(cookie);
 	}
